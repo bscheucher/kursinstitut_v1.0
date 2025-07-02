@@ -10,11 +10,10 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface TrainerMapper {
 
-    @Mapping(source = "abteilung.id", target = "abteilungId")
-    @Mapping(source = "abteilung.abteilungName", target = "abteilungName")
     TrainerDto toDto(Trainer trainer);
 
-    @Mapping(source = "abteilungId", target = "abteilung.id")
+    @Mapping(target = "erstelltAm", ignore = true)
+    @Mapping(target = "geaendertAm", ignore = true)
     Trainer toEntity(TrainerDto trainerDto);
 
     List<TrainerDto> toDtoList(List<Trainer> trainers);

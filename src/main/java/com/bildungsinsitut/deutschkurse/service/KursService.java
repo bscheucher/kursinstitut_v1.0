@@ -38,7 +38,7 @@ public class KursService {
         return kursMapper.toDtoList(kursRepository.findAll());
     }
 
-    public KursDto getKursById(Long id) {
+    public KursDto getKursById(Integer id) {
         Kurs kurs = kursRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Kurs not found with id: " + id));
         return kursMapper.toDto(kurs);
@@ -68,7 +68,7 @@ public class KursService {
         return kursMapper.toDto(kurs);
     }
 
-    public KursDto updateKurs(Long id, KursDto kursDto) {
+    public KursDto updateKurs(Integer id, KursDto kursDto) {
         Kurs kurs = kursRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Kurs not found with id: " + id));
 
@@ -84,7 +84,7 @@ public class KursService {
         return kursMapper.toDto(kurs);
     }
 
-    public void deleteKurs(Long id) {
+    public void deleteKurs(Integer id) {
         if (!kursRepository.existsById(id)) {
             throw new ResourceNotFoundException("Kurs not found with id: " + id);
         }

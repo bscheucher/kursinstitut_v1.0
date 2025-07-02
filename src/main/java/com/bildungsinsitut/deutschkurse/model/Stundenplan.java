@@ -19,7 +19,7 @@ public class Stundenplan {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "stundenplan_id")
-    private Long id;
+    private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "kurs_id", nullable = false)

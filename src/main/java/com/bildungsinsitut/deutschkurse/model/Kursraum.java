@@ -19,7 +19,7 @@ public class Kursraum {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "kursraum_id")
-    private Long id;
+    private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "abteilung_id", nullable = false)

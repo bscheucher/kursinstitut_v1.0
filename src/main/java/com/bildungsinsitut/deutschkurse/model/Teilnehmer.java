@@ -21,7 +21,7 @@ public class Teilnehmer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "teilnehmer_id")
-    private Long id;
+    private Integer id;
 
     @Column(name = "vorname", nullable = false, length = 100)
     private String vorname;

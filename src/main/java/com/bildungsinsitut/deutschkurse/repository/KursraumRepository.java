@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface KursraumRepository extends JpaRepository<Kursraum, Long> {
+public interface KursraumRepository extends JpaRepository<Kursraum, Integer> {
     List<Kursraum> findByVerfuegbarTrue();
-    List<Kursraum> findByAbteilungId(Long abteilungId);
+    List<Kursraum> findByAbteilungId(Integer abteilungId);
 }

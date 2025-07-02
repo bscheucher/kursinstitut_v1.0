@@ -19,7 +19,7 @@ public class Abteilung {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "abteilung_id")
-    private Long id;
+    private Integer id;
 
     @Column(name = "abteilung_name", nullable = false, length = 100)
     private String abteilungName;

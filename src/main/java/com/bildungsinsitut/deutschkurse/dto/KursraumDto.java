@@ -6,8 +6,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class KursraumDto {
-    private Long id;
-    private Long abteilungId;
+    private Integer id;
+    private Integer abteilungId;
     private String raumName;
     private Integer kapazitaet;
     private String ausstattung;

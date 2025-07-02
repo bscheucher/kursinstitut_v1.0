@@ -8,13 +8,13 @@ import java.time.LocalDate;
 @Getter
 @Setter
 public class KursDto {
-    private Long id;
+    private Integer id;
     private String kursName;
-    private Long kurstypId;
+    private Integer kurstypId;
     private String kurstypName;
-    private Long kursraumId;
+    private Integer kursraumId;
     private String kursraumName;
-    private Long trainerId;
+    private Integer trainerId;
     private String trainerName;
     private LocalDate startdatum;
     private LocalDate enddatum;

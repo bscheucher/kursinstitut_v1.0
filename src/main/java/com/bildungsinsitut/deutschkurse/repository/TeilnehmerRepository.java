@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface TeilnehmerRepository extends JpaRepository<Teilnehmer, Long> {
+public interface TeilnehmerRepository extends JpaRepository<Teilnehmer, Integer> {
     List<Teilnehmer> findByAktivTrue();
     List<Teilnehmer> findByEmailContainingIgnoreCase(String email);
     List<Teilnehmer> findByVornameContainingIgnoreCaseOrNachnameContainingIgnoreCase(

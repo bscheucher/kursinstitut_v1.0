@@ -25,7 +25,7 @@ public class KursController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<KursDto> getKursById(@PathVariable Long id) {
+    public ResponseEntity<KursDto> getKursById(@PathVariable Integer id) {
         return ResponseEntity.ok(kursService.getKursById(id));
     }
 

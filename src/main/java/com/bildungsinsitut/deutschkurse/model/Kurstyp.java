@@ -18,7 +18,7 @@ public class Kurstyp {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "kurstyp_id")
-    private Long id;
+    private Integer id;
 
     @Column(name = "kurstyp_code", nullable = false, unique = true, length = 20)
     private String kurstypCode;

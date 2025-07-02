@@ -27,7 +27,7 @@ public class TrainerService {
         return trainerMapper.toDtoList(trainerRepository.findByAktivTrue());
     }
 
-    public TrainerDto getTrainerById(Long id) {
+    public TrainerDto getTrainerById(Integer id) { // Changed Long to Integer
         Trainer trainer = trainerRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Trainer not found with id: " + id));
         return trainerMapper.toDto(trainer);
@@ -44,7 +44,7 @@ public class TrainerService {
         return trainerMapper.toDto(trainer);
     }
 
-    public TrainerDto updateTrainer(Long id, TrainerDto trainerDto) {
+    public TrainerDto updateTrainer(Integer id, TrainerDto trainerDto) { // Changed Long to Integer
         Trainer trainer = trainerRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Trainer not found with id: " + id));
 
@@ -60,7 +60,7 @@ public class TrainerService {
         return trainerMapper.toDto(trainer);
     }
 
-    public void deleteTrainer(Long id) {
+    public void deleteTrainer(Integer id) { // Changed Long to Integer
         Trainer trainer = trainerRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Trainer not found with id: " + id));
         trainer.setAktiv(false);

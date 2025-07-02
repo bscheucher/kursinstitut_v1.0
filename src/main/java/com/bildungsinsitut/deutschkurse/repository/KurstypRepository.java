@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface KurstypRepository extends JpaRepository<Kurstyp, Long> {
+public interface KurstypRepository extends JpaRepository<Kurstyp, Integer> {
     List<Kurstyp> findByAktivTrueOrderByLevelOrder();
     Kurstyp findByKurstypCode(String code);
 }

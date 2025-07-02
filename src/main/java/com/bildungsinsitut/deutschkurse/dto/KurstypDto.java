@@ -6,7 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class KurstypDto {
-    private Long id;
+    private Integer id;
     private String kurstypCode;
     private String kurstypName;
     private String beschreibung;
