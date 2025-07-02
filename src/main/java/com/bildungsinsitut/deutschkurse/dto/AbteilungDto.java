@@ -1,0 +1,15 @@
+package com.bildungsinsitut.deutschkurse.dto;
+
+import lombok.Getter;
+import lombok.Setter;
+import java.util.List;
+
+@Getter
+@Setter
+public class AbteilungDto {
+    private Long id;
+    private String abteilungName;
+    private String beschreibung;
+    private Boolean aktiv;
+    private List<KursraumDto> kursraeume;
+}
