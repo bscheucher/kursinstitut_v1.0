@@ -1,0 +1,12 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: jdbc:postgresql://dpg-cthaospu0jms73828epg-a.frankfurt-postgres.render.com/pf_projects
+    username: pf_projects_user
+    password: FYVBk3JpTNLPhZ8kqRWuhksLKywLoZRX
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
