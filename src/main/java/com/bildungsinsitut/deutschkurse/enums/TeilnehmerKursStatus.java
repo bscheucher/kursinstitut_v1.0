@@ -1,13 +1,14 @@
 package com.bildungsinsitut.deutschkurse.enums;
 
-public enum GenderType {
-    M("Männlich"),
-    W("Weiblich"),
-    D("Divers");
+public enum TeilnehmerKursStatus {
+    ANGEMELDET("Angemeldet"),
+    AKTIV("Aktiv"),
+    ABGESCHLOSSEN("Abgeschlossen"),
+    ABGEBROCHEN("Abgebrochen");
 
     private final String displayName;
 
-    GenderType(String displayName) {
+    TeilnehmerKursStatus(String displayName) {
         this.displayName = displayName;
     }
 
