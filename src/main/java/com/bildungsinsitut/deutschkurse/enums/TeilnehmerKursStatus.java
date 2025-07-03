@@ -1,10 +1,10 @@
 package com.bildungsinsitut.deutschkurse.enums;
 
 public enum TeilnehmerKursStatus {
-    ANGEMELDET("Angemeldet"),
-    AKTIV("Aktiv"),
-    ABGESCHLOSSEN("Abgeschlossen"),
-    ABGEBROCHEN("Abgebrochen");
+    angemeldet("Angemeldet"),
+    aktiv("Aktiv"),
+    abgeschlossen("Abgeschlossen"),
+    abgebrochen("Abgebrochen");
 
     private final String displayName;
 

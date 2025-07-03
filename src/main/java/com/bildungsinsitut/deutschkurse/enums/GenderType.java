@@ -1,9 +1,9 @@
 package com.bildungsinsitut.deutschkurse.enums;
 
 public enum GenderType {
-    M("Männlich"),
-    W("Weiblich"),
-    D("Divers");
+    m("Männlich"),
+    w("Weiblich"),
+    d("Divers");
 
     private final String displayName;
 

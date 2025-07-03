@@ -51,7 +51,7 @@ public class Kurs {
     private Integer aktuelleTeilnehmer = 0;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status")
+    @Column(name = "status", length = 20)  // Added length constraint to match DB
     private KursStatusType status = KursStatusType.geplant;
 
     @Column(name = "beschreibung", columnDefinition = "TEXT")

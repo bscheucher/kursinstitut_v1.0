@@ -4,18 +4,24 @@ import com.bildungsinsitut.deutschkurse.enums.TrainerStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "trainer")
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Trainer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "trainer_id")
-    private Integer id; // Make sure this is Integer, not Long
+    private Integer id;
 
     @Column(name = "vorname", nullable = false, length = 100)
     private String vorname;
@@ -29,12 +35,19 @@ public class Trainer {
     @Column(name = "telefon", length = 20)
     private String telefon;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "abteilung_id")
+    private Abteilung abteilung;
+
     @Enumerated(EnumType.STRING)
-    @Column(name = "status")
-    private TrainerStatus status = TrainerStatus.VERFUEGBAR;
+    @Column(name = "status", length = 20)  // Added length constraint to match DB
+    private TrainerStatus status = TrainerStatus.verfuegbar;
 
     @Column(name = "qualifikationen", columnDefinition = "TEXT")
     private String qualifikationen;
+
+    @Column(name = "einstellungsdatum")
+    private LocalDate einstellungsdatum;
 
     @Column(name = "aktiv")
     private Boolean aktiv = true;
@@ -44,6 +57,9 @@ public class Trainer {
 
     @Column(name = "geaendert_am")
     private LocalDateTime geaendertAm;
+
+    @OneToMany(mappedBy = "trainer", cascade = CascadeType.ALL)
+    private List<Kurs> kurse;
 
     @PrePersist
     protected void onCreate() {

@@ -11,7 +11,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "teilnehmer_kurse")
+@Table(name = "teilnehmer_kurse",
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"teilnehmer_id", "kurs_id"})})
 @Getter
 @Setter
 @NoArgsConstructor
@@ -38,8 +39,8 @@ public class TeilnehmerKurs {
     private LocalDate abmeldedatum;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status")
-    private TeilnehmerKursStatus status = TeilnehmerKursStatus.ANGEMELDET;
+    @Column(name = "status", length = 20)  // Added length constraint to match DB
+    private TeilnehmerKursStatus status = TeilnehmerKursStatus.angemeldet;  // lowercase to match enum
 
     @Column(name = "abschlussnote", precision = 3, scale = 2)
     private BigDecimal abschlussnote;

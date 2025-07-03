@@ -1,6 +1,7 @@
 package com.bildungsinsitut.deutschkurse.controller;
 
 import com.bildungsinsitut.deutschkurse.dto.TrainerDto;
+import com.bildungsinsitut.deutschkurse.model.Trainer;
 import com.bildungsinsitut.deutschkurse.service.TrainerService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -32,6 +33,11 @@ public class TrainerController {
     @GetMapping("/verfuegbar")
     public ResponseEntity<List<TrainerDto>> getVerfuegbareTrainer() {
         return ResponseEntity.ok(trainerService.getVerfuegbareTrainer());
+    }
+
+    @GetMapping("/abteilung/{abteilungId}")
+    public ResponseEntity<List<Trainer>> getTrainerByAbteilung(@PathVariable Integer abteilungId) {
+        return ResponseEntity.ok(trainerService.getTrainerByAbteilung(abteilungId));
     }
 
     @PostMapping

@@ -1,9 +1,9 @@
 package com.bildungsinsitut.deutschkurse.enums;
 
 public enum TrainerStatus {
-    VERFUEGBAR("Verfügbar"),
-    IM_EINSATZ("Im Einsatz"),
-    ABWESEND("Abwesend");
+    verfuegbar("Verfügbar"),
+    im_einsatz("Im Einsatz"),
+    abwesend("Abwesend");
 
     private final String displayName;
 

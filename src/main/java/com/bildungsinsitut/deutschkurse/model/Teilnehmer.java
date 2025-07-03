@@ -39,7 +39,7 @@ public class Teilnehmer {
     private LocalDate geburtsdatum;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "geschlecht", length = 1)
+    @Column(name = "geschlecht", length = 1)  // Added length constraint to match DB CHAR(1)
     private GenderType geschlecht;
 
     @Column(name = "staatsangehoerigkeit", length = 100)
@@ -62,6 +62,9 @@ public class Teilnehmer {
 
     @OneToMany(mappedBy = "teilnehmer", cascade = CascadeType.ALL)
     private List<TeilnehmerKurs> teilnehmerKurse;
+
+    @OneToMany(mappedBy = "teilnehmer", cascade = CascadeType.ALL)
+    private List<Anwesenheit> anwesenheiten;
 
     @PrePersist
     protected void onCreate() {

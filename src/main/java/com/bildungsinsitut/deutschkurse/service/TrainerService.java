@@ -27,7 +27,7 @@ public class TrainerService {
         return trainerMapper.toDtoList(trainerRepository.findByAktivTrue());
     }
 
-    public TrainerDto getTrainerById(Integer id) { // Changed Long to Integer
+    public TrainerDto getTrainerById(Integer id) {
         Trainer trainer = trainerRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Trainer not found with id: " + id));
         return trainerMapper.toDto(trainer);
@@ -35,7 +35,7 @@ public class TrainerService {
 
     public List<TrainerDto> getVerfuegbareTrainer() {
         return trainerMapper.toDtoList(
-                trainerRepository.findByStatusAndAktivTrue(TrainerStatus.VERFUEGBAR));
+                trainerRepository.findByStatusAndAktivTrue(TrainerStatus.verfuegbar));  // lowercase enum value
     }
 
     public TrainerDto createTrainer(TrainerDto trainerDto) {
@@ -44,7 +44,7 @@ public class TrainerService {
         return trainerMapper.toDto(trainer);
     }
 
-    public TrainerDto updateTrainer(Integer id, TrainerDto trainerDto) { // Changed Long to Integer
+    public TrainerDto updateTrainer(Integer id, TrainerDto trainerDto) {
         Trainer trainer = trainerRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Trainer not found with id: " + id));
 
@@ -55,15 +55,20 @@ public class TrainerService {
         trainer.setTelefon(trainerDto.getTelefon());
         trainer.setStatus(trainerDto.getStatus());
         trainer.setQualifikationen(trainerDto.getQualifikationen());
+        trainer.setEinstellungsdatum(trainerDto.getEinstellungsdatum());
 
         trainer = trainerRepository.save(trainer);
         return trainerMapper.toDto(trainer);
     }
 
-    public void deleteTrainer(Integer id) { // Changed Long to Integer
+    public void deleteTrainer(Integer id) {
         Trainer trainer = trainerRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Trainer not found with id: " + id));
         trainer.setAktiv(false);
         trainerRepository.save(trainer);
+    }
+
+    public List<Trainer> getTrainerByAbteilung(Integer abteilungId) {
+        return trainerRepository.findByAbteilungIdAndAktivTrue(abteilungId);
     }
 }
