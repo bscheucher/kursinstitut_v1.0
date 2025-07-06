@@ -1,5 +1,6 @@
 package com.bildungsinsitut.deutschkurse.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,6 +24,7 @@ public class Kursraum {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "abteilung_id", nullable = false)
+    @JsonIgnore
     private Abteilung abteilung;
 
     @Column(name = "raum_name", nullable = false, length = 50)
@@ -40,7 +42,8 @@ public class Kursraum {
     @Column(name = "erstellt_am", updatable = false)
     private LocalDateTime erstelltAm;
 
-    @OneToMany(mappedBy = "kursraum", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "kursraum", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Kurs> kurse;
 
     @PrePersist

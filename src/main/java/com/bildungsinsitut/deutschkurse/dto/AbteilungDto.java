@@ -11,5 +11,4 @@ public class AbteilungDto {
     private String abteilungName;
     private String beschreibung;
     private Boolean aktiv;
-    private List<KursraumDto> kursraeume;
 }

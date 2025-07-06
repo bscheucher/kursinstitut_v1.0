@@ -3,6 +3,7 @@ package com.bildungsinsitut.deutschkurse.dto;
 import com.bildungsinsitut.deutschkurse.enums.TrainerStatus;
 import lombok.Getter;
 import lombok.Setter;
+
 import java.time.LocalDate;
 
 @Getter
@@ -19,4 +20,6 @@ public class TrainerDto {
     private String qualifikationen;
     private LocalDate einstellungsdatum;
     private Boolean aktiv;
+    private AbteilungDto abteilung;
+
 }

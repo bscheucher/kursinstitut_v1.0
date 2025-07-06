@@ -1,6 +1,7 @@
 package com.bildungsinsitut.deutschkurse.model;
 
 import com.bildungsinsitut.deutschkurse.enums.KursStatusType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,14 +29,17 @@ public class Kurs {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "kurstyp_id", nullable = false)
+    // Keep this - we want to show kurstyp in response
     private Kurstyp kurstyp;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "kursraum_id", nullable = false)
+    @JsonIgnore  // ADD THIS - prevents circular reference through kursraum
     private Kursraum kursraum;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "trainer_id", nullable = false)
+    @JsonIgnore  // ADD THIS - prevents circular reference through trainer
     private Trainer trainer;
 
     @Column(name = "startdatum", nullable = false)
@@ -51,7 +55,7 @@ public class Kurs {
     private Integer aktuelleTeilnehmer = 0;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status", length = 20)  // Added length constraint to match DB
+    @Column(name = "status", length = 20)
     private KursStatusType status = KursStatusType.geplant;
 
     @Column(name = "beschreibung", columnDefinition = "TEXT")
@@ -64,12 +68,15 @@ public class Kurs {
     private LocalDateTime geaendertAm;
 
     @OneToMany(mappedBy = "kurs", cascade = CascadeType.ALL)
+    @JsonIgnore  // ADD THIS - prevents circular reference
     private List<TeilnehmerKurs> teilnehmerKurse;
 
     @OneToMany(mappedBy = "kurs", cascade = CascadeType.ALL)
+    @JsonIgnore  // ADD THIS - prevents circular reference
     private List<Stundenplan> stundenplaene;
 
     @OneToMany(mappedBy = "kurs", cascade = CascadeType.ALL)
+    @JsonIgnore  // ADD THIS - prevents circular reference
     private List<Anwesenheit> anwesenheiten;
 
     @PrePersist

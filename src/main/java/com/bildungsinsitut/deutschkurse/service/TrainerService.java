@@ -35,7 +35,7 @@ public class TrainerService {
 
     public List<TrainerDto> getVerfuegbareTrainer() {
         return trainerMapper.toDtoList(
-                trainerRepository.findByStatusAndAktivTrue(TrainerStatus.verfuegbar));  // lowercase enum value
+                trainerRepository.findByStatusAndAktivTrue(TrainerStatus.verfuegbar));
     }
 
     public TrainerDto createTrainer(TrainerDto trainerDto) {
@@ -56,6 +56,7 @@ public class TrainerService {
         trainer.setStatus(trainerDto.getStatus());
         trainer.setQualifikationen(trainerDto.getQualifikationen());
         trainer.setEinstellungsdatum(trainerDto.getEinstellungsdatum());
+        trainer.setAktiv(trainerDto.getAktiv());
 
         trainer = trainerRepository.save(trainer);
         return trainerMapper.toDto(trainer);
@@ -68,7 +69,14 @@ public class TrainerService {
         trainerRepository.save(trainer);
     }
 
+    // Keep this method for backward compatibility (returns entities)
     public List<Trainer> getTrainerByAbteilung(Integer abteilungId) {
         return trainerRepository.findByAbteilungIdAndAktivTrue(abteilungId);
+    }
+
+    // NEW METHOD: Returns DTOs for public API
+    public List<TrainerDto> getTrainerDtoByAbteilung(Integer abteilungId) {
+        List<Trainer> trainers = trainerRepository.findByAbteilungIdAndAktivTrue(abteilungId);
+        return trainerMapper.toDtoList(trainers);
     }
 }

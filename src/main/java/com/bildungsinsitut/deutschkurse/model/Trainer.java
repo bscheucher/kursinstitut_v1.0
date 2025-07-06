@@ -40,7 +40,7 @@ public class Trainer {
     private Abteilung abteilung;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status", length = 20)  // Added length constraint to match DB
+    @Column(name = "status", length = 20)
     private TrainerStatus status = TrainerStatus.verfuegbar;
 
     @Column(name = "qualifikationen", columnDefinition = "TEXT")
@@ -57,6 +57,11 @@ public class Trainer {
 
     @Column(name = "geaendert_am")
     private LocalDateTime geaendertAm;
+
+    // Optional relationship with User for authentication
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @OneToMany(mappedBy = "trainer", cascade = CascadeType.ALL)
     private List<Kurs> kurse;

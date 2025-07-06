@@ -1,6 +1,7 @@
 package com.bildungsinsitut.deutschkurse.config;
 
 import com.bildungsinsitut.deutschkurse.enums.KursStatusType;
+import com.bildungsinsitut.deutschkurse.enums.Role;
 import com.bildungsinsitut.deutschkurse.enums.TrainerStatus;
 import com.bildungsinsitut.deutschkurse.model.*;
 import com.bildungsinsitut.deutschkurse.repository.*;
@@ -10,6 +11,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
 
@@ -19,8 +21,11 @@ import java.time.LocalDate;
 @Profile("!prod") // Don't run in production
 public class DataInitializer {
 
+    private final PasswordEncoder passwordEncoder;
+
     @Bean
     CommandLineRunner initDatabase(
+            UserRepository userRepository,
             AbteilungRepository abteilungRepository,
             KursraumRepository kursraumRepository,
             KurstypRepository kurstypRepository,
@@ -29,15 +34,74 @@ public class DataInitializer {
 
         return args -> {
             // Check if data already exists
-            if (abteilungRepository.count() > 0) {
+            if (userRepository.count() > 0) {
                 log.info("Database already contains data, skipping initialization");
                 return;
             }
 
             log.info("Initializing database with sample data...");
 
-            // Create sample data only if tables are empty
             try {
+                // Create default admin user
+                User adminUser = new User();
+                adminUser.setUsername("admin");
+                adminUser.setEmail("admin@deutschkurse.de");
+                adminUser.setPassword(passwordEncoder.encode("admin123"));
+                adminUser.setFirstName("System");
+                adminUser.setLastName("Administrator");
+                adminUser.setRole(Role.ADMIN);
+                adminUser.setEnabled(true);
+                adminUser.setAccountNonExpired(true);
+                adminUser.setAccountNonLocked(true);
+                adminUser.setCredentialsNonExpired(true);
+                userRepository.save(adminUser);
+                log.info("Created admin user: admin / admin123");
+
+                // Create trainer user
+                User trainerUser = new User();
+                trainerUser.setUsername("maria.schmidt");
+                trainerUser.setEmail("maria.schmidt@deutschkurse.de");
+                trainerUser.setPassword(passwordEncoder.encode("trainer123"));
+                trainerUser.setFirstName("Maria");
+                trainerUser.setLastName("Schmidt");
+                trainerUser.setRole(Role.TRAINER);
+                trainerUser.setEnabled(true);
+                trainerUser.setAccountNonExpired(true);
+                trainerUser.setAccountNonLocked(true);
+                trainerUser.setCredentialsNonExpired(true);
+                userRepository.save(trainerUser);
+                log.info("Created trainer user: maria.schmidt / trainer123");
+
+                // Create staff user
+                User staffUser = new User();
+                staffUser.setUsername("staff");
+                staffUser.setEmail("staff@deutschkurse.de");
+                staffUser.setPassword(passwordEncoder.encode("staff123"));
+                staffUser.setFirstName("Staff");
+                staffUser.setLastName("Member");
+                staffUser.setRole(Role.STAFF);
+                staffUser.setEnabled(true);
+                staffUser.setAccountNonExpired(true);
+                staffUser.setAccountNonLocked(true);
+                staffUser.setCredentialsNonExpired(true);
+                userRepository.save(staffUser);
+                log.info("Created staff user: staff / staff123");
+
+                // Create regular user
+                User regularUser = new User();
+                regularUser.setUsername("user");
+                regularUser.setEmail("user@deutschkurse.de");
+                regularUser.setPassword(passwordEncoder.encode("user123"));
+                regularUser.setFirstName("Test");
+                regularUser.setLastName("User");
+                regularUser.setRole(Role.USER);
+                regularUser.setEnabled(true);
+                regularUser.setAccountNonExpired(true);
+                regularUser.setAccountNonLocked(true);
+                regularUser.setCredentialsNonExpired(true);
+                userRepository.save(regularUser);
+                log.info("Created regular user: user / user123");
+
                 // Create Abteilungen
                 Abteilung hauptgebaeude = new Abteilung();
                 hauptgebaeude.setAbteilungName("Hauptgebäude");
@@ -63,17 +127,18 @@ public class DataInitializer {
                 a1.setAktiv(true);
                 kurstypRepository.save(a1);
 
-                // Create Trainer
+                // Create Trainer linked to user
                 Trainer trainer1 = new Trainer();
                 trainer1.setVorname("Maria");
                 trainer1.setNachname("Schmidt");
-                trainer1.setEmail("maria.schmidt@institut.de");
+                trainer1.setEmail("maria.schmidt@deutschkurse.de");
                 trainer1.setTelefon("030-12345-01");
                 trainer1.setAbteilung(hauptgebaeude);
                 trainer1.setStatus(TrainerStatus.verfuegbar);
                 trainer1.setQualifikationen("DaF/DaZ Zertifikat, 5 Jahre Erfahrung");
                 trainer1.setEinstellungsdatum(LocalDate.now().minusYears(2));
                 trainer1.setAktiv(true);
+                trainer1.setUser(trainerUser); // Link to user account
                 trainerRepository.save(trainer1);
 
                 // Create Kurs
@@ -91,9 +156,14 @@ public class DataInitializer {
                 kursRepository.save(kurs1);
 
                 log.info("Sample data initialization completed");
+                log.info("=== Default Users Created ===");
+                log.info("Admin: admin / admin123 (ADMIN role)");
+                log.info("Trainer: maria.schmidt / trainer123 (TRAINER role)");
+                log.info("Staff: staff / staff123 (STAFF role)");
+                log.info("User: user / user123 (USER role)");
 
             } catch (Exception e) {
-                log.error("Error initializing sample data: {}", e.getMessage());
+                log.error("Error initializing sample data: {}", e.getMessage(), e);
             }
         };
     }

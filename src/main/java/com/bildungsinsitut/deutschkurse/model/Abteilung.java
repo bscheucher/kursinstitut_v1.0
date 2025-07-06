@@ -1,5 +1,6 @@
 package com.bildungsinsitut.deutschkurse.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -34,9 +35,11 @@ public class Abteilung {
     private LocalDateTime erstelltAm;
 
     @OneToMany(mappedBy = "abteilung", cascade = CascadeType.ALL)
+    @JsonIgnore  // ADD THIS - prevents circular reference
     private List<Kursraum> kursraeume;
 
     @OneToMany(mappedBy = "abteilung", cascade = CascadeType.ALL)
+    @JsonIgnore  // ADD THIS - prevents circular reference
     private List<Trainer> trainer;
 
     @PrePersist
