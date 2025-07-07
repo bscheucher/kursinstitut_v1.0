@@ -15,7 +15,8 @@ public interface TrainerMapper {
     TrainerDto toDto(Trainer trainer);
 
     @Mapping(source = "abteilungId", target = "abteilung.id")
-    @Mapping(target = "abteilung", ignore = true)
+    @Mapping(target = "abteilung", ignore = true) // Will be set by service
+    @Mapping(target = "user", ignore = true) // Will be set by service if needed
     @Mapping(target = "kurse", ignore = true)
     @Mapping(target = "erstelltAm", ignore = true)
     @Mapping(target = "geaendertAm", ignore = true)

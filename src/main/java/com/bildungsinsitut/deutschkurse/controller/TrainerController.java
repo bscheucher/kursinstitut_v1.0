@@ -1,7 +1,6 @@
 package com.bildungsinsitut.deutschkurse.controller;
 
 import com.bildungsinsitut.deutschkurse.dto.TrainerDto;
-import com.bildungsinsitut.deutschkurse.model.Trainer;
 import com.bildungsinsitut.deutschkurse.service.TrainerService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -35,9 +34,11 @@ public class TrainerController {
         return ResponseEntity.ok(trainerService.getVerfuegbareTrainer());
     }
 
+    // FIXED: Return DTOs instead of entities
     @GetMapping("/abteilung/{abteilungId}")
-    public ResponseEntity<List<Trainer>> getTrainerByAbteilung(@PathVariable Integer abteilungId) {
-        return ResponseEntity.ok(trainerService.getTrainerByAbteilung(abteilungId));
+    public ResponseEntity<List<TrainerDto>> getTrainerByAbteilung(@PathVariable Integer abteilungId) {
+        // Use the DTO method instead of the entity method
+        return ResponseEntity.ok(trainerService.getTrainerDtoByAbteilung(abteilungId));
     }
 
     @PostMapping

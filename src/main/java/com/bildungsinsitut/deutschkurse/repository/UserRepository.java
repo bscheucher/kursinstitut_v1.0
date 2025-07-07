@@ -28,7 +28,8 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     List<User> findByRole(Role role);
 
-    List<User> findByRoleAndEnabledTrue(Role role, Boolean enabled);
+    // FIXED: Changed method name to match the parameter signature
+    List<User> findByRoleAndEnabled(Role role, Boolean enabled);
 
     @Modifying
     @Query("UPDATE User u SET u.lastLogin = :loginTime WHERE u.id = :userId")

@@ -33,8 +33,8 @@ public class DataInitializer {
             KursRepository kursRepository) {
 
         return args -> {
-            // Check if data already exists
-            if (userRepository.count() > 0) {
+            // Check if data already exists - check multiple tables to be safe
+            if (userRepository.count() > 0 || abteilungRepository.count() > 0 || kurstypRepository.count() > 0) {
                 log.info("Database already contains data, skipping initialization");
                 return;
             }
@@ -102,60 +102,79 @@ public class DataInitializer {
                 userRepository.save(regularUser);
                 log.info("Created regular user: user / user123");
 
-                // Create Abteilungen
-                Abteilung hauptgebaeude = new Abteilung();
-                hauptgebaeude.setAbteilungName("Hauptgebäude");
-                hauptgebaeude.setBeschreibung("Zentrale Verwaltung und Standardkurse");
-                hauptgebaeude.setAktiv(true);
-                abteilungRepository.save(hauptgebaeude);
+                // Create Abteilungen - Check if it doesn't already exist
+                Abteilung hauptgebaeude = abteilungRepository.findByAbteilungName("Hauptgebäude");
+                if (hauptgebaeude == null) {
+                    hauptgebaeude = new Abteilung();
+                    hauptgebaeude.setAbteilungName("Hauptgebäude");
+                    hauptgebaeude.setBeschreibung("Zentrale Verwaltung und Standardkurse");
+                    hauptgebaeude.setAktiv(true);
+                    hauptgebaeude = abteilungRepository.save(hauptgebaeude);
+                    log.info("Created Abteilung: Hauptgebäude");
+                }
 
                 // Create Kursräume
-                Kursraum raum1 = new Kursraum();
-                raum1.setAbteilung(hauptgebaeude);
-                raum1.setRaumName("Raum A101");
-                raum1.setKapazitaet(12);
-                raum1.setAusstattung("Whiteboard, Beamer, Flipchart");
-                raum1.setVerfuegbar(true);
-                kursraumRepository.save(raum1);
+                if (kursraumRepository.count() == 0) {
+                    Kursraum raum1 = new Kursraum();
+                    raum1.setAbteilung(hauptgebaeude);
+                    raum1.setRaumName("Raum A101");
+                    raum1.setKapazitaet(12);
+                    raum1.setAusstattung("Whiteboard, Beamer, Flipchart");
+                    raum1.setVerfuegbar(true);
+                    kursraumRepository.save(raum1);
+                    log.info("Created Kursraum: Raum A101");
+                }
 
-                // Create Kurstypen
-                Kurstyp a1 = new Kurstyp();
-                a1.setKurstypCode("A1");
-                a1.setKurstypName("Deutsch A1");
-                a1.setBeschreibung("Grundstufe - Erste Kenntnisse");
-                a1.setLevelOrder(1);
-                a1.setAktiv(true);
-                kurstypRepository.save(a1);
+                // Create Kurstypen - Check if it doesn't already exist
+                Kurstyp a1 = kurstypRepository.findByKurstypCode("A1");
+                if (a1 == null) {
+                    a1 = new Kurstyp();
+                    a1.setKurstypCode("A1");
+                    a1.setKurstypName("Deutsch A1");
+                    a1.setBeschreibung("Grundstufe - Erste Kenntnisse");
+                    a1.setLevelOrder(1);
+                    a1.setAktiv(true);
+                    a1 = kurstypRepository.save(a1);
+                    log.info("Created Kurstyp: A1");
+                }
 
                 // Create Trainer linked to user
-                Trainer trainer1 = new Trainer();
-                trainer1.setVorname("Maria");
-                trainer1.setNachname("Schmidt");
-                trainer1.setEmail("maria.schmidt@deutschkurse.de");
-                trainer1.setTelefon("030-12345-01");
-                trainer1.setAbteilung(hauptgebaeude);
-                trainer1.setStatus(TrainerStatus.verfuegbar);
-                trainer1.setQualifikationen("DaF/DaZ Zertifikat, 5 Jahre Erfahrung");
-                trainer1.setEinstellungsdatum(LocalDate.now().minusYears(2));
-                trainer1.setAktiv(true);
-                trainer1.setUser(trainerUser); // Link to user account
-                trainerRepository.save(trainer1);
+                if (trainerRepository.count() == 0) {
+                    Trainer trainer1 = new Trainer();
+                    trainer1.setVorname("Maria");
+                    trainer1.setNachname("Schmidt");
+                    trainer1.setEmail("maria.schmidt@deutschkurse.de");
+                    trainer1.setTelefon("030-12345-01");
+                    trainer1.setAbteilung(hauptgebaeude);
+                    trainer1.setStatus(TrainerStatus.verfuegbar);
+                    trainer1.setQualifikationen("DaF/DaZ Zertifikat, 5 Jahre Erfahrung");
+                    trainer1.setEinstellungsdatum(LocalDate.now().minusYears(2));
+                    trainer1.setAktiv(true);
+                    trainer1.setUser(trainerUser); // Link to user account
+                    trainer1 = trainerRepository.save(trainer1);
+                    log.info("Created Trainer: Maria Schmidt");
 
-                // Create Kurs
-                Kurs kurs1 = new Kurs();
-                kurs1.setKursName("Deutsch A1 - Anfänger Morgens");
-                kurs1.setKurstyp(a1);
-                kurs1.setKursraum(raum1);
-                kurs1.setTrainer(trainer1);
-                kurs1.setStartdatum(LocalDate.now().plusDays(7));
-                kurs1.setEnddatum(LocalDate.now().plusMonths(3));
-                kurs1.setMaxTeilnehmer(12);
-                kurs1.setAktuelleTeilnehmer(0);
-                kurs1.setStatus(KursStatusType.geplant);
-                kurs1.setBeschreibung("Deutschkurs für absolute Anfänger");
-                kursRepository.save(kurs1);
+                    // Create Kurs only if we have all dependencies and no existing courses
+                    if (kursRepository.count() == 0) {
+                        Kursraum raum = kursraumRepository.findAll().get(0); // Get the first room
 
-                log.info("Sample data initialization completed");
+                        Kurs kurs1 = new Kurs();
+                        kurs1.setKursName("Deutsch A1 - Anfänger Morgens");
+                        kurs1.setKurstyp(a1);
+                        kurs1.setKursraum(raum);
+                        kurs1.setTrainer(trainer1);
+                        kurs1.setStartdatum(LocalDate.now().plusDays(7));
+                        kurs1.setEnddatum(LocalDate.now().plusMonths(3));
+                        kurs1.setMaxTeilnehmer(12);
+                        kurs1.setAktuelleTeilnehmer(0);
+                        kurs1.setStatus(KursStatusType.geplant);
+                        kurs1.setBeschreibung("Deutschkurs für absolute Anfänger");
+                        kursRepository.save(kurs1);
+                        log.info("Created Kurs: Deutsch A1 - Anfänger Morgens");
+                    }
+                }
+
+                log.info("Sample data initialization completed successfully");
                 log.info("=== Default Users Created ===");
                 log.info("Admin: admin / admin123 (ADMIN role)");
                 log.info("Trainer: maria.schmidt / trainer123 (TRAINER role)");
