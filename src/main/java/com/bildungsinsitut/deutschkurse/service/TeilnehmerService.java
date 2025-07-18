@@ -53,6 +53,7 @@ public class TeilnehmerService {
         teilnehmer.setGeschlecht(teilnehmerDto.getGeschlecht());
         teilnehmer.setStaatsangehoerigkeit(teilnehmerDto.getStaatsangehoerigkeit());
         teilnehmer.setMuttersprache(teilnehmerDto.getMuttersprache());
+        teilnehmer.setAnmeldedatum(teilnehmerDto.getAnmeldedatum());
         teilnehmer.setAktiv(teilnehmerDto.getAktiv());
 
         teilnehmer = teilnehmerRepository.save(teilnehmer);
