@@ -1,6 +1,7 @@
 package com.bildungsinsitut.deutschkurse.model;
 
 import com.bildungsinsitut.deutschkurse.enums.GenderType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -61,9 +62,11 @@ public class Teilnehmer {
     private LocalDateTime geaendertAm;
 
     @OneToMany(mappedBy = "teilnehmer", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<TeilnehmerKurs> teilnehmerKurse;
 
     @OneToMany(mappedBy = "teilnehmer", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Anwesenheit> anwesenheiten;
 
     @PrePersist

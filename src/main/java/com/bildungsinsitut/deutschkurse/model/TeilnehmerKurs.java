@@ -1,6 +1,7 @@
 package com.bildungsinsitut.deutschkurse.model;
 
 import com.bildungsinsitut.deutschkurse.enums.TeilnehmerKursStatus;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,10 +27,12 @@ public class TeilnehmerKurs {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "teilnehmer_id", nullable = false)
+    @JsonIgnore
     private Teilnehmer teilnehmer;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "kurs_id", nullable = false)
+    @JsonIgnore
     private Kurs kurs;
 
     @Column(name = "anmeldedatum")
