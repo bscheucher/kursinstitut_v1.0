@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -193,13 +194,15 @@ public class KursController {
         TeilnehmerKurs updated = teilnehmerKursService.updateEnrollmentStatus(
                 teilnehmerId, kursId, request.getStatus());
 
-        return ResponseEntity.ok(Map.of(
-                "message", "Enrollment status updated successfully",
-                "teilnehmerId", teilnehmerId,
-                "kursId", kursId,
-                "status", updated.getStatus(),
-                "abmeldedatum", updated.getAbmeldedatum()
-        ));
+        // Use HashMap instead of Map.of() to allow null values
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", "Enrollment status updated successfully");
+        response.put("teilnehmerId", teilnehmerId);
+        response.put("kursId", kursId);
+        response.put("status", updated.getStatus());
+        response.put("abmeldedatum", updated.getAbmeldedatum()); // This can be null
+
+        return ResponseEntity.ok(response);
     }
 
     /**
@@ -213,25 +216,22 @@ public class KursController {
 
         boolean isEnrolled = teilnehmerKursService.isStudentEnrolledInCourse(teilnehmerId, kursId);
 
-        Map<String, Object> response = Map.of(
-                "teilnehmerId", teilnehmerId,
-                "kursId", kursId,
-                "isEnrolled", isEnrolled
-        );
+        Map<String, Object> response = new HashMap<>();
+        response.put("teilnehmerId", teilnehmerId);
+        response.put("kursId", kursId);
+        response.put("isEnrolled", isEnrolled);
 
         if (isEnrolled) {
             TeilnehmerKurs enrollment = teilnehmerKursService.getEnrollmentDetails(teilnehmerId, kursId);
-            response = Map.of(
-                    "teilnehmerId", teilnehmerId,
-                    "kursId", kursId,
-                    "isEnrolled", true,
-                    "enrollmentDetails", Map.of(
-                            "anmeldedatum", enrollment.getAnmeldedatum(),
-                            "status", enrollment.getStatus(),
-                            "abmeldedatum", enrollment.getAbmeldedatum(),
-                            "bemerkungen", enrollment.getBemerkungen()
-                    )
-            );
+
+            // Use HashMap for nested object to allow null values
+            Map<String, Object> enrollmentDetails = new HashMap<>();
+            enrollmentDetails.put("anmeldedatum", enrollment.getAnmeldedatum());
+            enrollmentDetails.put("status", enrollment.getStatus());
+            enrollmentDetails.put("abmeldedatum", enrollment.getAbmeldedatum()); // Can be null
+            enrollmentDetails.put("bemerkungen", enrollment.getBemerkungen()); // Can be null
+
+            response.put("enrollmentDetails", enrollmentDetails);
         }
 
         return ResponseEntity.ok(response);
