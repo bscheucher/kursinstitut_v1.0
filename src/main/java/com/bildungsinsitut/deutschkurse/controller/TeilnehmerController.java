@@ -88,27 +88,5 @@ public class TeilnehmerController {
         List<KursDto> kurse = teilnehmerKursService.getKurseForTeilnehmer(teilnehmerId);
         return ResponseEntity.ok(kurse);
     }
-
-    /**
-     * Enroll student in a course (alternative endpoint)
-     * POST /api/v1/teilnehmer/{teilnehmerId}/kurse/{kursId}
-     */
-    @PostMapping("/{teilnehmerId}/kurse/{kursId}")
-    public ResponseEntity<String> enrollInKurs(@PathVariable Integer teilnehmerId,
-                                               @PathVariable Integer kursId) {
-        teilnehmerKursService.enrollTeilnehmerInKurs(teilnehmerId, kursId);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body("Student " + teilnehmerId + " successfully enrolled in course " + kursId);
-    }
-
-    /**
-     * Remove student from a course (alternative endpoint)
-     * DELETE /api/v1/teilnehmer/{teilnehmerId}/kurse/{kursId}
-     */
-    @DeleteMapping("/{teilnehmerId}/kurse/{kursId}")
-    public ResponseEntity<String> removeFromKurs(@PathVariable Integer teilnehmerId,
-                                                 @PathVariable Integer kursId) {
-        teilnehmerKursService.removeTeilnehmerFromKurs(teilnehmerId, kursId);
-        return ResponseEntity.ok("Student " + teilnehmerId + " successfully removed from course " + kursId);
-    }
 }
+
