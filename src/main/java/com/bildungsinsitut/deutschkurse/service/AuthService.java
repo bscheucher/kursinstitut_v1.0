@@ -38,6 +38,7 @@ public class AuthService {
         try {
             log.info("Attempting login for user: {}", loginRequest.getUsername());
 
+            // Try to authenticate - this will throw BadCredentialsException if invalid
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             loginRequest.getUsername(),
@@ -70,8 +71,13 @@ public class AuthService {
             );
 
         } catch (AuthenticationException e) {
+            // This catches both BadCredentialsException and other auth failures
             log.error("Login failed for user: {} - {}", loginRequest.getUsername(), e.getMessage());
             throw new BadCredentialsException("Invalid username or password");
+        } catch (Exception e) {
+            // Catch any other unexpected errors
+            log.error("Unexpected error during login for user: {} - {}", loginRequest.getUsername(), e.getMessage(), e);
+            throw new RuntimeException("An unexpected error occurred during login");
         }
     }
 
