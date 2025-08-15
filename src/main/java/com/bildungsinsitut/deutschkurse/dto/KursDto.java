@@ -1,6 +1,7 @@
 package com.bildungsinsitut.deutschkurse.dto;
 
 import com.bildungsinsitut.deutschkurse.enums.KursStatusType;
+import com.bildungsinsitut.deutschkurse.validation.groups.OnCreate;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -36,10 +37,10 @@ public class KursDto {
     private String trainerName; // Read-only, populated by mapper
 
     @NotNull(message = "Start date is required")
-    @Future(message = "Start date must be in the future")
+    @Future(message = "Start date must be in the future", groups = OnCreate.class)
     private LocalDate startdatum;
 
-    @Future(message = "End date must be in the future")
+    @Future(message = "End date must be in the future", groups = OnCreate.class)
     private LocalDate enddatum;
 
     @Positive(message = "Maximum participants must be positive")

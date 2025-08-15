@@ -16,11 +16,13 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -133,6 +135,63 @@ public class AuthService {
     public UserDto getCurrentUser(String username) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found: " + username));
+
+        return convertToDto(user);
+    }
+
+    /**
+     * Update current user's profile information
+     */
+    public UserDto updateCurrentUser(String currentUsername, UpdateUserRequest updateRequest) {
+        log.info("Attempting to update user profile for: {}", currentUsername);
+
+        // Get current user
+        User user = userRepository.findByUsername(currentUsername)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found: " + currentUsername));
+
+        // Validate username uniqueness if changed
+        if (StringUtils.hasText(updateRequest.getUsername()) &&
+                !updateRequest.getUsername().equals(user.getUsername())) {
+
+            if (userRepository.existsByUsername(updateRequest.getUsername())) {
+                throw new IllegalArgumentException("Username is already taken");
+            }
+            user.setUsername(updateRequest.getUsername());
+            log.info("Username updated for user {}", user.getId());
+        }
+
+        // Validate email uniqueness if changed
+        if (StringUtils.hasText(updateRequest.getEmail()) &&
+                !updateRequest.getEmail().equals(user.getEmail())) {
+
+            if (userRepository.existsByEmail(updateRequest.getEmail())) {
+                throw new IllegalArgumentException("Email is already registered");
+            }
+            user.setEmail(updateRequest.getEmail());
+            log.info("Email updated for user {}", user.getId());
+        }
+
+        // Update password if provided
+        if (StringUtils.hasText(updateRequest.getPassword())) {
+            user.setPassword(passwordEncoder.encode(updateRequest.getPassword()));
+            log.info("Password updated for user {}", user.getId());
+        }
+
+        // Update first name if provided
+        if (updateRequest.getFirstName() != null) {
+            user.setFirstName(updateRequest.getFirstName().trim());
+            log.info("First name updated for user {}", user.getId());
+        }
+
+        // Update last name if provided
+        if (updateRequest.getLastName() != null) {
+            user.setLastName(updateRequest.getLastName().trim());
+            log.info("Last name updated for user {}", user.getId());
+        }
+
+        // Save updated user
+        user = userRepository.save(user);
+        log.info("User profile updated successfully for user: {}", user.getUsername());
 
         return convertToDto(user);
     }

@@ -6,11 +6,14 @@ import com.bildungsinsitut.deutschkurse.enums.TeilnehmerKursStatus;
 import com.bildungsinsitut.deutschkurse.model.TeilnehmerKurs;
 import com.bildungsinsitut.deutschkurse.service.KursService;
 import com.bildungsinsitut.deutschkurse.service.TeilnehmerKursService;
+import com.bildungsinsitut.deutschkurse.validation.groups.OnCreate;
+import com.bildungsinsitut.deutschkurse.validation.groups.OnUpdate;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -97,7 +100,7 @@ public class KursController {
      * POST /api/v1/kurse
      */
     @PostMapping
-    public ResponseEntity<KursDto> createKurs(@Valid @RequestBody KursDto kursDto) {
+    public ResponseEntity<KursDto> createKurs(@Validated(OnCreate.class) @RequestBody KursDto kursDto) {
         KursDto created = kursService.createKurs(kursDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
@@ -108,7 +111,7 @@ public class KursController {
      */
     @PutMapping("/{id}")
     public ResponseEntity<KursDto> updateKurs(@PathVariable Integer id,
-                                              @Valid @RequestBody KursDto kursDto) {
+                                              @Validated(OnUpdate.class) @RequestBody KursDto kursDto) {
         return ResponseEntity.ok(kursService.updateKurs(id, kursDto));
     }
 

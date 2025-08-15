@@ -94,6 +94,41 @@ public class AuthController {
         return ResponseEntity.ok(user);
     }
 
+    /**
+     * Update current user's profile
+     * PUT /api/v1/auth/me
+     */
+    @PutMapping("/me")
+    public ResponseEntity<?> updateCurrentUser(@Valid @RequestBody UpdateUserRequest updateRequest) {
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String currentUsername = authentication.getName();
+
+            log.info("Profile update request received for user: {}", currentUsername);
+
+            UserDto updatedUser = authService.updateCurrentUser(currentUsername, updateRequest);
+
+            log.info("Profile updated successfully for user: {}", currentUsername);
+            return ResponseEntity.ok(updatedUser);
+
+        } catch (IllegalArgumentException e) {
+            log.warn("Profile update failed: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of(
+                            "error", "Bad Request",
+                            "message", e.getMessage()
+                    ));
+
+        } catch (Exception e) {
+            log.error("Unexpected error during profile update: {}", e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of(
+                            "error", "Internal Server Error",
+                            "message", "An unexpected error occurred while updating profile"
+                    ));
+        }
+    }
+
     @PostMapping("/logout")
     public ResponseEntity<Map<String, String>> logout() {
         SecurityContextHolder.clearContext();
